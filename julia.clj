@@ -5,10 +5,11 @@
     (:import [javax.imageio ImageIO]
              [java.io File]))
 
-(defn sq [x] (* x x))
+(defn sqr [x] (* x x))
+(defn csqr [x]  (+ (sqr (c/real-part x)) (sqr (c/imaginary-part x))))
 
-(def w (* 4 2560))
-(def h (* 4 1440))
+(def w 2560)
+(def h 1440)
 
 (def t (dtt/compute-tensor
          [h w]
@@ -16,7 +17,7 @@
              (loop [x (c/complex (+ -1.5 (* x (/ 3.0 w)))
                                  (+ -0.9 (* y (/ 1.8 h))))
                     i 0]
-                   (if (or (>= i 200) (> (+ (sq (c/real-part x)) (sq (c/imaginary-part x))) 4))
+                   (if (or (>= i 200) (> (csqr x) 4))
                      (- 255 (quot (* i 255) 200))
                      (recur (c/+ (c/* x x) (c/complex -0.79 0.15))
                             (inc i)))))
